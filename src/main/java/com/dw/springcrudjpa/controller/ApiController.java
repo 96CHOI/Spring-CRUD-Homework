@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dw.springcrudjpa.model.Student;
@@ -20,4 +22,12 @@ public class ApiController {
     public List<Student> callAllsStudents() {
         return repo.findAll();
     }
+
+    // 학생등록
+    @PostMapping("/api/v1/add")
+	public Student callSaveStudent(@RequestBody Student student) {
+		// save == insert
+		student = repo.save(student);
+		return student;
+	}
 }
