@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD! 😛</title>
+    <link rel="stylesheet" href="/src/main/resources/static/style.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Ubuntu', sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      :root {
+        --blue: #287bff;
+        --white: #fff;
+        --grey: #f5f5f5;
+        --black1: #222;
+        --black2: #999;
+        --black3: #212529;
+      }
+      .container {
+        position: relative;
+        width: 100%;
+      }
+      .navigation {
+        position: fixed;
+        width: 300px;
+        height: 100%;
+        background-color: var(--black3);
+        border-left: 10px solid var(--black1);
+        transition: 0.5s;
+        overflow: hidden;
+      }
+      .navigation ul {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+      .navigation ul li {
+        position: relative;
+        width: 100%;
+        list-style: none;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+      }
+      .navigation ul li:hover,
+      .navigation ul li.hovered {
+        background-color: var(--white);
+      }
+      .navigation ul li:nth-child(1) {
+        margin-bottom: 40px;
+        pointer-events: none;
+      }
+      .navigation ul li a {
+        position: relative;
+        display: block;
+        width: 100%;
+        display: flex;
+        text-decoration: none;
+        color: var(--white);
+      }
+
+      .navigation ul li:hover a,
+      .navigation ul li.hovered a {
+        color: var(--blue);
+      }
+
+      .navigation ul li a .icon {
+        position: relative;
+        display: block;
+        min-width: 60px;
+        height: 60px;
+        line-height: 70px;
+        text-align: center;
+      }
+
+      .navigation ul li a .icon ion-icon {
+        font-size: 1.75rem;
+      }
+      .navigation ul li a .title {
+        position: relative;
+        display: block;
+        padding: 0 10px;
+        height: 60px;
+        line-height: 60px;
+        text-align: start;
+        white-space: nowrap;
+        font-size: 20px;
+      }
+
+      .main {
+        position: absolute;
+        width: calc(100% - 300px);
+        left: 300px;
+        min-height: 100vh;
+        background-color: var(--white);
+        transition: 0.5s;
+      }
+
+      .topbar {
+        width: 98%;
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+        margin-top: 20px;
+      }
+
+      .toggle {
+        position: relative;
+        top: 8px;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2.5em;
+        cursor: pointer;
+      }
+      .search {
+        position: relative;
+        width: 400px;
+        margin: 0 10px;
+      }
+      .search label {
+        position: relative;
+        width: 100%;
+      }
+      .search label input {
+        width: 100%;
+        height: 40px;
+        border-radius: 40px;
+        padding: 5px 20px;
+        padding-left: 40px;
+        font-size: 18px;
+        outline: none;
+        border: 1px solid var(--black2);
+      }
+
+      .details {
+        position: relative;
+        width: 100%;
+        padding: 20px;
+        margin-top: 10px;
+      }
+      .details .recentOrders {
+        position: relative;
+        width: 90%;
+        min-height: 500px;
+        background-color: var(--white);
+        padding: 20px;
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+      }
+      .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .cardHeader h2 {
+        font-weight: 600;
+        color: var(--blue);
+      }
+      .excel-btn {
+        position: relative;
+        padding: 0.8%;
+        background: #1cc88a;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 6px;
+      }
+      .btn {
+        position: relative;
+        padding: 0.8%;
+        background: var(--black3);
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 6px;
+      }
+      .details table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      .details table thead th {
+        text-align: center;
+        font-weight: 600;
+      }
+      .details table tbody td {
+        text-align: center;
+        padding: 10px;
+      }
+
+      .details table tr {
+        color: var(--black1);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .details table tbody tr:hover {
+        background: var(--black2);
+        color: var(--white);
+        transition: 0.4s;
+        cursor: pointer;
+      }
+
+      .row {
+        padding: 3px 4px;
+        background: #8de02c;
+        color: var(--white);
+        border-radius: 4px;
+        font-size: 16x;
+        font-weight: 500;
+      }
+
+      .high {
+        padding: 3px 4px;
+        background: #f00;
+        color: var(--white);
+        border-radius: 4px;
+        font-size: 16x;
+        font-weight: 500;
+      }
+
+      .middle {
+        padding: 3px 4px;
+        background: #f9ca3f;
+        color: var(--white);
+        border-radius: 4px;
+        font-size: 16x;
+        font-weight: 500;
+      }
+
+      .cardBox {
+        position: relative;
+        width: 95%;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 30px;
+      }
+
+      .cardBox .card {
+        position: relative;
+        background-color: var(--white);
+        padding: 30px;
+        border-radius: 20px;
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+      }
+      .cardBox .card .numbers {
+        position: relative;
+        font-weight: 500;
+        font-size: 2.5em;
+        color: var(--black3);
+      }
+
+      .cardBox .card .cardName {
+        color: var(--black2);
+        font-size: 1.1em;
+        margin-top: 5px;
+      }
+      .cardBox .card .iconBx {
+        font-size: 3.5em;
+        color: var(--black2);
+      }
+
+      .cardBox .card:hover {
+        background-color: var(--black2);
+      }
+
+      .cardBox .card:hover .numbers,
+      .cardBox .card:hover .cardName,
+      .cardBox .card:hover .iconBx {
+        color: var(--white);
+      }
+      /* 글 작성 */
+      .write-popup {
+        z-index: 1;
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 40px auto;
+        width: 700px;
+        height: 500px;
+        background-color: var(--grey);
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+      }
+      .editor {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 3%;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+        height: 80%;
+      }
+      .input-box {
+        display: flex;
+        justify-content: space-around;
+      }
+      .input-box label {
+        padding: 1%;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .input-box input {
+        border: solid 2px #1e90ff;
+        border-radius: 5px;
+        padding: 1%;
+        font-size: 18px;
+        width: 70%;
+      }
+      .input-box textarea {
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        border: solid 2px #1e90ff;
+        border-radius: 5px;
+      }
+
+      .btn-area {
+        text-align: center;
+      }
+
+      .btn-cancel {
+        font-size: 18px;
+        background-color: #e74a3b;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+        margin-right: 10px;
+      }
+
+      .btn-success {
+        font-size: 18px;
+        background-color: #1cc88a;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+      }
+      .logs-popup {
+        z-index: 10;
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 40px auto;
+        width: 700px;
+        height: 500px;
+        background-color: var(--grey);
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+      }
+      /* 글 수정 */
+      .update-popup {
+        z-index: 1;
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 40px auto;
+        width: 700px;
+        height: 500px;
+        background-color: var(--grey);
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+      }
+
+      .btn-update {
+        font-size: 18px;
+        background-color: #f6c23e;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+        margin-right: 10px;
+      }
+
+      .btn-delete {
+        font-size: 18px;
+        background-color: #36b9cc;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+      }
+      .close {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        right: -30px;
+      }
+      .btn-close {
+        font-size: 22px;
+        background-color: #5a5c69;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+      }
+      /* pagination css*/
+      .pagination {
+        text-align: center;
+        margin-top: 50px;
+      }
+
+      .pagination a {
+        padding: 0.5rem 0.75rem;
+        text-decoration: none;
+        background-color: var(--white);
+        color: var(--blue);
+        border: 1px solid #dddfeb;
+        line-height: 1.45;
+        font-size: 18px;
+        margin-right: 5px;
+      }
+      .pagination a:hover {
+        cursor: pointer;
+        background-color: var(--black2);
+        color: var(--white);
+      }
+      .logout {
+        text-decoration: none;
+        font-size: 20px;
+        background-color: var(--blue);
+        color: var(--white);
+        padding: 0.5rem 0.75rem;
+        border-radius: 5px;
+      }
+      .postBtn {
+        cursor: pointer;
+        background-color: var(--blue);
+        border-radius: 5px;
+        color: #fff;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- 학생 추가 팝업 -->
+      <div class="write-popup">
+        <div class="editor">
+          <div class="input-box">
+            <label>학생 이름 : </label>
+            <input type="text" placeholder=" 이름을 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>학생 나이 : </label>
+            <input type="number" placeholder=" 나이를 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>연락처 : </label>
+            <input type="number" placeholder=" - 를 제거하고 입력하세요." />
+          </div>
+          <div class="input-box">
+            <label>주소 </label>
+            <input type="text" placeholder=" 주소를 입력하세요..." />
+            <button class="postBtn" onclick="getPostCode()">우편번호 찾기</button>
+          </div>
+          <div class="btn-area">
+            <a href="#" class="btn-cancel" onclick="">등록 취소</a>
+            <a href="#" class="btn-success" onclick="">학생 등록</a>
+          </div>
+        </div>
+      </div>
+      <!-- 학생정보 수정 -->
+      <div class="update-popup">
+        <div class="editor">
+          <div class="close">
+            <a href="#" class="btn-close">닫기</a>
+          </div>
+          <div class="input-box">
+            <label>학생 번호 : </label>
+            <input type="number" value="7899" readonly />
+          </div>
+          <div class="input-box">
+            <label>학생 이름 : </label>
+            <input type="text" value="현상원" />
+          </div>
+          <div class="input-box">
+            <label>학생 나이 : </label>
+            <input type="number" value="88" placeholder=" 나이를 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>연락처 : </label>
+            <input type="number" value="010-4097-****" placeholder=" - 를 제거하고 입력하세요." />
+          </div>
+          <div class="input-box">
+            <label>주소 </label>
+            <input type="text" value="대전 선화동 방산빌딩 지하 53층" placeholder=" 주소를 입력하세요..." />
+            <button class="postBtn" onclick="getPostCode()">우편번호 찾기</button>
+          </div>
+          <div class="btn-area">
+            <a href="#" class="btn-update" onclick="">수정</a>
+            <a href="#" class="btn-delete" onclick="">삭제</a>
+          </div>
+        </div>
+      </div>
+      <div class="navigation">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="icon"><ion-icon name="logo-apple"></ion-icon></span>
+              <span class="title">DW ADMIN</span>
+            </a>
+          </li>
+          <li>
+            <a href="./student">
+              <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+              <span class="title">학생 목록</span>
+            </a>
+          </li>
+          <li>
+            <a href="./dept">
+              <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+              <span class="title">과정 목록</span>
+            </a>
+          </li>
+          <!-- <li>
+            <a href="#">
+              <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
+              <span class="title">Sign Out</span>
+            </a>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+    <!-- main -->
+    <div class="main">
+      <!-- cards -->
+      <div class="cardBox">
+        <div class="card">
+          <div>
+            <div id="studentsCnt" class="numbers">2</div>
+            <div class="cardName">학생 수</div>
+          </div>
+          <div class="iconBx">
+            <ion-icon name="school-outline"></ion-icon>
+          </div>
+        </div>
+        <div class="card">
+          <div>
+            <div id="boardCnt" class="numbers">27.6</div>
+            <div class="cardName">학생 평균나이</div>
+          </div>
+          <div class="iconBx">
+            <ion-icon name="book-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+      <!-- table -->
+      <div class="details">
+        <div class="recentOrders">
+          <div class="cardHeader">
+            <h2>학생 목록</h2>
+            <!-- <a href="#" class="btn" style="background-color: #19ce60" onclick="downloadExcelFile()">엑셀 다운로드</a> -->
+            <a href="#" id="empAdd" class="btn">학생 추가</a>
+          </div>
+          <table>
+            <tr>
+              <th>학생 번호</th>
+              <th>학생 이름</th>
+              <th>학생 나이</th>
+              <th>학생 연락처</th>
+              <th>주소</th>
+              <th>과정 명</th>
+            </tr>
+            <tbody id="data"></tbody>
+          </table>
+          <!-- 페이징 처리하는 HTML -->
+          <div class="pagination">
+            <a>Previous</a>
+            <a>1</a>
+            <a>2</a>
+            <a>3</a>
+            <a>4</a>
+            <a>5</a>
+            <a>Next</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <!-- Icon CDN -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <!-- Jquery CDN -->
+  <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"
+  ></script>
+  <!-- 도로명주소 CDN -->
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+  <script>
+    // 학생 목록 페이지 테이블 생성
+    $.ajax({
+      url: '/api/v1/student',
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        for (var i = 0; i < response.length; i++) {
+          tr = $('<tr onclick="getSubject(' + response[i].studentNum + ')"></tr>');
+          studentNum = $('<td>' + response[i].studentNum + '</td>');
+          studentName = $('<td>' + response[i].studentName + '</td>');
+          studentAge = $('<td>' + response[i].studentAge + '</td>');
+          studentPhone = $('<td>' + response[i].studentPhone + '</td>');
+          studentAddr = $('<td>' + response[i].studentAddr + '</td>');
+          processName = $('<td>' + response[i].process.processName + '</td>');
+          console.log(response[i]);
+          tr.append(studentNum);
+          tr.append($('<td>' + response[i].studentName + '</td>'));
+          tr.append(studentAge);
+          tr.append(studentPhone);
+          tr.append(studentAddr);
+          tr.append(processName);
+          $('#data').append(tr);
+        }
+      },
+    });
+
+    $('#empAdd').click(function () {
+      $('.write-popup').css('display', 'block');
+    });
+    $('.btn-cancel').click(function () {
+      $('.write-popup').css('display', 'none');
+    });
+    $('.btn-close').click(function () {
+      $('.update-popup').css('display', 'none');
+    });
+    let list = document.querySelectorAll('.navigation li');
+    function activeLink() {
+      list.forEach((item) => {
+        item.classList.remove('hovered');
+      });
+      this.classList.add('hovered');
+    }
+    list.forEach((item) => {
+      item.addEventListener('mouseover', activeLink);
+    });
+    function getData() {
+      $('.update-popup').css('display', 'block');
+    }
+
+    //도로명 주소 함수
+    function getPostCode() {
+      new daum.Postcode({
+        oncomplete: function (data) {
+          // 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
+          // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+          var fullRoadAddr = data.roadAddress; // 도로명 주소 변수
+          var extraRoadAddr = ''; // 도로명 조합형 주소 변수
+          // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+          // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+          if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+            extraRoadAddr += data.bname;
+          }
+          // 건물명이 있고, 공동주택일 경우 추가한다.
+          if (data.buildingName !== '' && data.apartment === 'Y') {
+            extraRoadAddr += extraRoadAddr !== '' ? ', ' + data.buildingName : data.buildingName;
+          }
+          // 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+          if (extraRoadAddr !== '') {
+            extraRoadAddr = ' (' + extraRoadAddr + ')';
+          }
+          // 도로명, 지번 주소의 유무에 따라 해당 조합형 주소를 추가한다.
+          if (fullRoadAddr !== '') {
+            fullRoadAddr += extraRoadAddr;
+          }
+        },
+      }).open();
+    }
+  </script>
+</html>

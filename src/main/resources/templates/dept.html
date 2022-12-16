@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD! 😛</title>
+    <link rel="stylesheet" href="static/style.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Ubuntu', sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      :root {
+        --blue: #287bff;
+        --white: #fff;
+        --grey: #f5f5f5;
+        --black1: #222;
+        --black2: #999;
+        --black3: #212529;
+      }
+      .container {
+        position: relative;
+        width: 100%;
+      }
+      .navigation {
+        position: fixed;
+        width: 300px;
+        height: 100%;
+        background-color: var(--black3);
+        border-left: 10px solid var(--black1);
+        transition: 0.5s;
+        overflow: hidden;
+      }
+      .navigation ul {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+      .navigation ul li {
+        position: relative;
+        width: 100%;
+        list-style: none;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+      }
+      .navigation ul li:hover,
+      .navigation ul li.hovered {
+        background-color: var(--white);
+      }
+      .navigation ul li:nth-child(1) {
+        margin-bottom: 40px;
+        pointer-events: none;
+      }
+      .navigation ul li a {
+        position: relative;
+        display: block;
+        width: 100%;
+        display: flex;
+        text-decoration: none;
+        color: var(--white);
+      }
+
+      .navigation ul li:hover a,
+      .navigation ul li.hovered a {
+        color: var(--blue);
+      }
+
+      .navigation ul li a .icon {
+        position: relative;
+        display: block;
+        min-width: 60px;
+        height: 60px;
+        line-height: 70px;
+        text-align: center;
+      }
+
+      .navigation ul li a .icon ion-icon {
+        font-size: 1.75rem;
+      }
+      .navigation ul li a .title {
+        position: relative;
+        display: block;
+        padding: 0 10px;
+        height: 60px;
+        line-height: 60px;
+        text-align: start;
+        white-space: nowrap;
+        font-size: 20px;
+      }
+
+      .main {
+        position: absolute;
+        width: calc(100% - 300px);
+        left: 300px;
+        min-height: 100vh;
+        background-color: var(--white);
+        transition: 0.5s;
+      }
+
+      .topbar {
+        width: 98%;
+        height: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 10px;
+        margin-top: 20px;
+      }
+
+      .toggle {
+        position: relative;
+        top: 8px;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2.5em;
+        cursor: pointer;
+      }
+      .search {
+        position: relative;
+        width: 400px;
+        margin: 0 10px;
+      }
+      .search label {
+        position: relative;
+        width: 100%;
+      }
+      .search label input {
+        width: 100%;
+        height: 40px;
+        border-radius: 40px;
+        padding: 5px 20px;
+        padding-left: 40px;
+        font-size: 18px;
+        outline: none;
+        border: 1px solid var(--black2);
+      }
+
+      .details {
+        position: relative;
+        width: 100%;
+        padding: 20px;
+        margin-top: 10px;
+      }
+      .details .recentOrders {
+        position: relative;
+        width: 90%;
+        min-height: 500px;
+        background-color: var(--white);
+        padding: 20px;
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+      }
+      .cardHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .cardHeader h2 {
+        font-weight: 600;
+        color: var(--blue);
+      }
+      .excel-btn {
+        position: relative;
+        padding: 0.8%;
+        background: #1cc88a;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 6px;
+      }
+      .btn {
+        position: relative;
+        padding: 0.8%;
+        background: var(--black3);
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 6px;
+      }
+      .details table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+      }
+
+      .details table thead th {
+        text-align: center;
+        font-weight: 600;
+      }
+      .details table tbody td {
+        text-align: center;
+        padding: 10px;
+      }
+
+      .details table tr {
+        color: var(--black1);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .details table tbody tr:hover {
+        background: var(--black2);
+        color: var(--white);
+        transition: 0.4s;
+        cursor: pointer;
+      }
+
+      .row {
+        padding: 3px 4px;
+        background: #8de02c;
+        color: var(--white);
+        border-radius: 4px;
+        font-size: 16x;
+        font-weight: 500;
+      }
+
+      .high {
+        padding: 3px 4px;
+        background: #f00;
+        color: var(--white);
+        border-radius: 4px;
+        font-size: 16x;
+        font-weight: 500;
+      }
+
+      .middle {
+        padding: 3px 4px;
+        background: #f9ca3f;
+        color: var(--white);
+        border-radius: 4px;
+        font-size: 16x;
+        font-weight: 500;
+      }
+
+      .cardBox {
+        position: relative;
+        width: 95%;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 30px;
+      }
+
+      .cardBox .card {
+        position: relative;
+        background-color: var(--white);
+        padding: 30px;
+        border-radius: 20px;
+        display: flex;
+        justify-content: space-between;
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08);
+      }
+      .cardBox .card .numbers {
+        position: relative;
+        font-weight: 500;
+        font-size: 2.5em;
+        color: var(--black3);
+      }
+
+      .cardBox .card .cardName {
+        color: var(--black2);
+        font-size: 1.1em;
+        margin-top: 5px;
+      }
+      .cardBox .card .iconBx {
+        font-size: 3.5em;
+        color: var(--black2);
+      }
+
+      .cardBox .card:hover {
+        background-color: var(--black2);
+      }
+
+      .cardBox .card:hover .numbers,
+      .cardBox .card:hover .cardName,
+      .cardBox .card:hover .iconBx {
+        color: var(--white);
+      }
+      /* 글 작성 */
+      .write-popup {
+        z-index: 1;
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 40px auto;
+        width: 700px;
+        height: 500px;
+        background-color: var(--grey);
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+      }
+      .editor {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 3%;
+        margin-left: auto;
+        margin-right: auto;
+        width: 80%;
+        height: 80%;
+      }
+      .input-box {
+        display: flex;
+        justify-content: space-around;
+      }
+      .input-box label {
+        padding: 1%;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .input-box input {
+        border: solid 2px #1e90ff;
+        border-radius: 5px;
+        padding: 1%;
+        font-size: 18px;
+        width: 70%;
+      }
+      .input-box textarea {
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        border: solid 2px #1e90ff;
+        border-radius: 5px;
+      }
+
+      .btn-area {
+        text-align: center;
+      }
+
+      .btn-cancel {
+        font-size: 18px;
+        background-color: #e74a3b;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+        margin-right: 10px;
+      }
+
+      .btn-success {
+        font-size: 18px;
+        background-color: #1cc88a;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+      }
+      .logs-popup {
+        z-index: 10;
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 40px auto;
+        width: 700px;
+        height: 500px;
+        background-color: var(--grey);
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+      }
+      /* 글 수정 */
+      .update-popup {
+        z-index: 1;
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 40px auto;
+        width: 700px;
+        height: 500px;
+        background-color: var(--grey);
+        box-shadow: 0 7px 25px rgba(0, 0, 0, 0.3);
+        border-radius: 5px;
+      }
+
+      .btn-update {
+        font-size: 18px;
+        background-color: #f6c23e;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+        margin-right: 10px;
+      }
+
+      .btn-delete {
+        font-size: 18px;
+        background-color: #36b9cc;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+      }
+      .close {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        right: -30px;
+      }
+      .btn-close {
+        font-size: 22px;
+        background-color: #5a5c69;
+        padding: 2%;
+        text-decoration: none;
+        color: var(--white);
+        border-radius: 3px;
+      }
+      /* pagination css*/
+      .pagination {
+        text-align: center;
+        margin-top: 50px;
+      }
+
+      .pagination a {
+        padding: 0.5rem 0.75rem;
+        text-decoration: none;
+        background-color: var(--white);
+        color: var(--blue);
+        border: 1px solid #dddfeb;
+        line-height: 1.45;
+        font-size: 18px;
+        margin-right: 5px;
+      }
+      .pagination a:hover {
+        cursor: pointer;
+        background-color: var(--black2);
+        color: var(--white);
+      }
+      .logout {
+        text-decoration: none;
+        font-size: 20px;
+        background-color: var(--blue);
+        color: var(--white);
+        padding: 0.5rem 0.75rem;
+        border-radius: 5px;
+      }
+      .postBtn {
+        cursor: pointer;
+        background-color: var(--blue);
+        border-radius: 5px;
+        color: #fff;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- 부서 추가 팝업 -->
+      <div class="write-popup">
+        <div class="editor">
+          <div class="input-box">
+            <label>과정 번호 : </label>
+            <input type="number" placeholder="과정번호를 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 명 : </label>
+            <input type="text" placeholder="과정명을 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 호실 : </label>
+            <input type="text" placeholder="과정호실을 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 기간 : </label>
+            <input type="date" value="2022-08-01" placeholder="과정 시작 날짜입력..." />
+            <input type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
+          </div>
+          <div class="input-box">
+            <label>담당 교사 : </label>
+            <input type="text" placeholder="교사이름 입력하세요..." />
+          </div>
+          <div class="btn-area">
+            <a href="#" class="btn-cancel" onclick="">취소</a>
+            <a href="#" class="btn-success" onclick="">등록</a>
+          </div>
+        </div>
+      </div>
+      <!-- 부서 수정 -->
+      <div class="update-popup">
+        <div class="editor">
+          <div class="close">
+            <a href="#" class="btn-close">닫기</a>
+          </div>
+          <div class="input-box">
+            <label>과정 번호 : </label>
+            <input type="number" value="9983" placeholder="과정번호를 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 명 : </label>
+            <input type="text" value="웹개발자 양성과정" placeholder="과정명을 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 호실 : </label>
+            <input type="text" value="501호" placeholder="과정호실을 입력하세요..." />
+          </div>
+          <div class="input-box">
+            <label>과정 기간 : </label>
+            <input type="date" value="2022-08-02" placeholder="과정 시작 날짜입력..." />
+            <input type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
+          </div>
+          <div class="input-box">
+            <label>담당 교사 : </label>
+            <input type="text" value="현상원 명예교수" placeholder="교사이름 입력하세요..." />
+          </div>
+          <div class="btn-area">
+            <a href="#" class="btn-update" onclick="">수정</a>
+            <a href="#" class="btn-delete" onclick="">삭제</a>
+          </div>
+        </div>
+      </div>
+      <div class="navigation">
+        <ul>
+          <li>
+            <a href="#">
+              <span class="icon"><ion-icon name="logo-apple"></ion-icon></span>
+              <span class="title">DW ADMIN</span>
+            </a>
+          </li>
+          <li>
+            <a href="./student">
+              <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+              <span class="title">학생 목록</span>
+            </a>
+          </li>
+          <li>
+            <a href="./dept">
+              <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+              <span class="title">과정 목록</span>
+            </a>
+          </li>
+          <!-- <li>
+            <a href="#">
+              <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
+              <span class="title">Sign Out</span>
+            </a>
+          </li> -->
+        </ul>
+      </div>
+    </div>
+    <!-- main -->
+    <div class="main">
+      <!-- table -->
+      <div class="details">
+        <div class="recentOrders">
+          <div class="cardHeader">
+            <h2>과정 목록</h2>
+            <a href="#" onclick="addSubject()" class="btn">과정 추가</a>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>과정 번호</th>
+                <th>과정 이름</th>
+                <th>과정 호실</th>
+                <th>과정 기간</th>
+                <th>담당 교사</th>
+              </tr>
+            </thead>
+            <tbody id="data">
+              <tr onclick="getSubject()">
+                <td>18990</td>
+                <td>주짓수 개발자 양성 과정</td>
+                <td>501호</td>
+                <td>22.06.15 ~ 22.12.22</td>
+                <td>이정수</td>
+              </tr>
+              <tr onclick="getSubject()">
+                <td>18330</td>
+                <td>React.js 개발자 양성 과정</td>
+                <td>502호</td>
+                <td>22.12.07 ~ 23.05.01</td>
+                <td>이예진</td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- 페이징 처리하는 HTML -->
+          <div class="pagination">
+            <a>Previous</a>
+            <a>1</a>
+            <a>2</a>
+            <a>3</a>
+            <a>4</a>
+            <a>5</a>
+            <a>Next</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <!-- Icon CDN -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <!-- Jquery CDN -->
+  <script
+    src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    $('.btn-cancel').click(function () {
+      $('.write-popup').css('display', 'none');
+    });
+    $('.btn-close').click(function () {
+      $('.update-popup').css('display', 'none');
+    });
+    let list = document.querySelectorAll('.navigation li');
+    function activeLink() {
+      list.forEach((item) => {
+        item.classList.remove('hovered');
+      });
+      this.classList.add('hovered');
+    }
+    list.forEach((item) => {
+      item.addEventListener('mouseover', activeLink);
+    });
+
+    function getSubject() {
+      $('.update-popup').css('display', 'block');
+    }
+
+    function addSubject() {
+      $('.write-popup').css('display', 'block');
+    }
+  </script>
+</html>
