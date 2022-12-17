@@ -37,7 +37,7 @@ public class Student {
 
     // @JoinColumn => member 테이블에 dept_id라는 컬럼(FK)생성
     @ManyToOne
-    @JoinColumn(name = "processNum")
+    @JoinColumn(name = "process_num")
     private Process process;
 
 }
