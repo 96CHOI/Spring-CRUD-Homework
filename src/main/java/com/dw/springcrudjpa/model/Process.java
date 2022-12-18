@@ -25,7 +25,10 @@ public class Process {
     private String processRoom; // 호실
 
     @Column
-    private String processDate; // 과정기간
+    private String processStartdate; // 과정기간시작
+    
+    @Column
+    private String processEnddate; // 과정기간끝
 
     @Column
     private String teacherName; // 담당교사

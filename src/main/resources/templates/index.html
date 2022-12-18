@@ -30,7 +30,7 @@
           <label>과정 번호 </label>
           <!-- <input id="add-processNum" type="number" placeholder=" 과정번호를 입력하세요..." /> -->
           <select name="" id="add-processNum">
-            <option value="11111">검도수업</option>
+            <option value="960714">프론트엔드 과정</option>
           </select>
         </div>
         <div class="input-box">
@@ -70,7 +70,8 @@
         <div class="input-box">
           <label>과정 번호 </label>
           <select name="" id="update-processNum">
-            <option value="11111">검도수업</option>
+            <option value="960714">프론트엔드 과정</option>
+            <option value="11111">백엔드</option>
           </select>
         </div>
         <div class="input-box">
@@ -99,7 +100,7 @@
           </a>
         </li>
         <li>
-          <a href="./dept">
+          <a href="./process">
             <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
             <span class="title">과정 목록</span>
           </a>
@@ -211,6 +212,24 @@
     },
   });
 
+  // 학생 상세정보 팝업창
+  function getStudent(studentNum) {
+    $('.update-popup').css('display', 'block');
+    $.ajax({
+      url: '/student/' + studentNum,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        $('#update-studentNum').val(response.studentNum);
+        console.log(studentNum);
+        $('#update-studentName').val(response.studentName);
+        $('#update-studentAge').val(response.studentAge);
+        $('#update-studentPhone').val(response.studentPhone);
+        $('#update-studentAddr').val(response.studentAddr);
+      },
+    });
+  }
+
   // 학생 정보 추가
   function studentAdd() {
     var name = $("#add-studentName").val();
@@ -243,7 +262,7 @@
       },
     });
   }
-
+  // 학생 정보 수정
   function doUpdate() {
     var num = $("#update-studentNum").val();
     var name = $("#update-studentName").val();
@@ -311,22 +330,7 @@
   list.forEach((item) => {
     item.addEventListener('mouseover', activeLink);
   });
-  function getStudent(studentNum) {
-    $('.update-popup').css('display', 'block');
-    $.ajax({
-      url: '/student/' + studentNum,
-      type: 'GET',
-      dataType: 'json',
-      success: function (response) {
-        $('#update-studentNum').val(response.studentNum);
-        console.log(studentNum);
-        $('#update-studentName').val(response.studentName);
-        $('#update-studentAge').val(response.studentAge);
-        $('#update-studentPhone').val(response.studentPhone);
-        $('#update-studentAddr').val(response.studentAddr);
-      },
-    });
-  }
+  
 
   //도로명 주소 함수
   function getPostCode() {

@@ -1,189 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CRUD! 😛</title>
-    <link rel="stylesheet" href="/style.css" />
-  </head>
-  <body>
-    <div class="container">
-      <!-- 부서 추가 팝업 -->
-      <div class="write-popup">
-        <div class="editor">
-          <div class="input-box">
-            <label>과정 번호 : </label>
-            <input type="number" placeholder="과정번호를 입력하세요..." />
-          </div>
-          <div class="input-box">
-            <label>과정 명 : </label>
-            <input type="text" placeholder="과정명을 입력하세요..." />
-          </div>
-          <div class="input-box">
-            <label>과정 호실 : </label>
-            <input type="text" placeholder="과정호실을 입력하세요..." />
-          </div>
-          <div class="input-box">
-            <label>과정 기간 : </label>
-            <input type="date" value="2022-08-01" placeholder="과정 시작 날짜입력..." />
-            <input type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
-          </div>
-          <div class="input-box">
-            <label>담당 교사 : </label>
-            <input type="text" placeholder="교사이름 입력하세요..." />
-          </div>
-          <div class="btn-area">
-            <a href="#" class="btn-cancel" onclick="">취소</a>
-            <a href="#" class="btn-success" onclick="">등록</a>
-          </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRUD! 😛</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <!-- 부서 추가 팝업 -->
+    <div class="write-popup">
+      <div class="editor">
+        <div class="input-box">
+          <label>과정 번호 : </label>
+          <input id="add-ProcessNum" type="number" placeholder="과정번호를 입력하세요..." />
+        </div>
+        <div class="input-box">
+          <label>과정 명 : </label>
+          <input id="add-ProcessName" type="text" placeholder="과정명을 입력하세요..." />
+        </div>
+        <div class="input-box">
+          <label>과정 호실 : </label>
+          <input id="add-ProcessRoom" type="text" placeholder="과정호실을 입력하세요..." />
+        </div>
+        <div class="input-box">
+          <label>과정 기간 : </label>
+          <input id="add-ProcessStartdate" type="date" placeholder="과정 시작 날짜입력..." />
+          <input id="add-ProcessEnddate" type="date" placeholder="과정 종료 날짜입력..." />
+        </div>
+        <div class="input-box">
+          <label>담당 교사 : </label>
+          <input id="add-TeacherName" type="text" placeholder="교사이름 입력하세요..." />
+        </div>
+        <div class="btn-area">
+          <a href="#" class="btn-cancel" onclick="">취소</a>
+          <a href="#" class="btn-success" onclick="processAdd()">등록</a>
         </div>
       </div>
-      <!-- 부서 수정 -->
-      <div class="update-popup">
-        <div class="editor">
-          <div class="close">
-            <a href="#" class="btn-close">닫기</a>
-          </div>
-          <div class="input-box">
-            <label>과정 번호 : </label>
-            <input type="number" value="9983" placeholder="과정번호를 입력하세요..." />
-          </div>
-          <div class="input-box">
-            <label>과정 명 : </label>
-            <input type="text" value="웹개발자 양성과정" placeholder="과정명을 입력하세요..." />
-          </div>
-          <div class="input-box">
-            <label>과정 호실 : </label>
-            <input type="text" value="501호" placeholder="과정호실을 입력하세요..." />
-          </div>
-          <div class="input-box">
-            <label>과정 기간 : </label>
-            <input type="date" value="2022-08-02" placeholder="과정 시작 날짜입력..." />
-            <input type="date" value="2023-02-06" placeholder="과정 종료 날짜입력..." />
-          </div>
-          <div class="input-box">
-            <label>담당 교사 : </label>
-            <input type="text" value="현상원 명예교수" placeholder="교사이름 입력하세요..." />
-          </div>
-          <div class="btn-area">
-            <a href="#" class="btn-update" onclick="">수정</a>
-            <a href="#" class="btn-delete" onclick="">삭제</a>
-          </div>
+    </div>
+    <!-- 부서 수정 -->
+    <div class="update-popup">
+      <div class="editor">
+        <div class="close">
+          <a href="#" class="btn-close">닫기</a>
+        </div>
+        <div class="input-box">
+          <label>과정 번호 : </label>
+          <input id="update-processNum" type="number" disabled="disabled" readonly/>
+        </div>
+        <div class="input-box">
+          <label>과정 명 : </label>
+          <input id="update-processName" type="text"/>
+        </div>
+        <div class="input-box">
+          <label>과정 호실 : </label>
+          <input id="update-processRoom" type="text"/>
+        </div>
+        <div class="input-box">
+          <label>과정 기간 : </label>
+          <input id="update-processStartdate" type="date"/>
+          <input id="update-processEnddate" type="date"/>
+        </div>
+        <div class="input-box">
+          <label>담당 교사 : </label>
+          <input id="update-teacherName" type="text"/>
+        </div>
+        <div class="btn-area">
+          <a href="#" class="btn-update" onclick="doUpdate()">수정</a>
+          <a href="#" class="btn-delete" onclick="doDelete()">삭제</a>
         </div>
       </div>
-      <div class="navigation">
-        <ul>
-          <li>
-            <a href="#">
-              <span class="icon"><ion-icon name="logo-apple"></ion-icon></span>
-              <span class="title">DW ADMIN</span>
-            </a>
-          </li>
-          <li>
-            <a href="./student">
-              <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
-              <span class="title">학생 목록</span>
-            </a>
-          </li>
-          <li>
-            <a href="./dept">
-              <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
-              <span class="title">과정 목록</span>
-            </a>
-          </li>
-          <!-- <li>
+    </div>
+    <div class="navigation">
+      <ul>
+        <li>
+          <a href="#">
+            <span class="icon"><ion-icon name="logo-apple"></ion-icon></span>
+            <span class="title">DW ADMIN</span>
+          </a>
+        </li>
+        <li>
+          <a href="./student">
+            <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+            <span class="title">학생 목록</span>
+          </a>
+        </li>
+        <li>
+          <a href="./process">
+            <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+            <span class="title">과정 목록</span>
+          </a>
+        </li>
+        <!-- <li>
             <a href="#">
               <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
               <span class="title">Sign Out</span>
             </a>
           </li> -->
-        </ul>
-      </div>
+      </ul>
     </div>
-    <!-- main -->
-    <div class="main">
-      <!-- table -->
-      <div class="details">
-        <div class="recentOrders">
-          <div class="cardHeader">
-            <h2>과정 목록</h2>
-            <a href="#" onclick="addSubject()" class="btn">과정 추가</a>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>과정 번호</th>
-                <th>과정 이름</th>
-                <th>과정 호실</th>
-                <th>과정 기간</th>
-                <th>담당 교사</th>
-              </tr>
-            </thead>
-            <tbody id="data">
-              <tr onclick="getSubject()">
-                <td>18990</td>
-                <td>주짓수 개발자 양성 과정</td>
-                <td>501호</td>
-                <td>22.06.15 ~ 22.12.22</td>
-                <td>이정수</td>
-              </tr>
-              <tr onclick="getSubject()">
-                <td>18330</td>
-                <td>React.js 개발자 양성 과정</td>
-                <td>502호</td>
-                <td>22.12.07 ~ 23.05.01</td>
-                <td>이예진</td>
-              </tr>
-            </tbody>
-          </table>
-          <!-- 페이징 처리하는 HTML -->
-          <div class="pagination">
-            <a>Previous</a>
-            <a>1</a>
-            <a>2</a>
-            <a>3</a>
-            <a>4</a>
-            <a>5</a>
-            <a>Next</a>
-          </div>
+  </div>
+  <!-- main -->
+  <div class="main">
+    <!-- table -->
+    <div class="details">
+      <div class="recentOrders">
+        <div class="cardHeader">
+          <h2>과정 목록</h2>
+          <a href="#" onclick="addSubject()" class="btn">과정 추가</a>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>과정 번호</th>
+              <th>과정 이름</th>
+              <th>과정 호실</th>
+              <th>과정 기간</th>
+              <th>담당 교사</th>
+            </tr>
+          </thead>
+          <tbody id="data"></tbody>
+        </table>
+        <!-- 페이징 처리하는 HTML -->
+        <div class="pagination">
+          <a>Previous</a>
+          <a>1</a>
+          <a>2</a>
+          <a>3</a>
+          <a>4</a>
+          <a>5</a>
+          <a>Next</a>
         </div>
       </div>
     </div>
-  </body>
-  <!-- Icon CDN -->
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <!-- Jquery CDN -->
-  <script
-    src="https://code.jquery.com/jquery-3.6.0.min.js"
-    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-    crossorigin="anonymous"
-  ></script>
-  <script>
-    $('.btn-cancel').click(function () {
-      $('.write-popup').css('display', 'none');
+  </div>
+</body>
+<!-- Icon CDN -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+<!-- Jquery CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+  // 과정 목록 페이지 테이블 생성 및 전체 조회
+  $.ajax({
+    url: '/api/v1/process',
+    type: 'GET',
+    dataType: 'json',
+    success: function (response) {
+      for (var i = 0; i < response.length; i++) {
+        // tr = $('<tr onclick="getData(' + response[i].studentNum + ')"></tr>');
+        tr = $('<tr onclick="getProcess(' + response[i].processNum + ')"></tr>');
+        processNum = $('<td>' + response[i].processNum + '</td>');
+        processName = $('<td>' + response[i].processName + '</td>');
+        processRoom = $('<td>' + response[i].processRoom + '</td>');
+        processDate = $('<td>' + response[i].processStartdate + '~' + response[i].processEnddate + '</td>');
+        teacherName = $('<td>' + response[i].teacherName + '</td>');
+        tr.append(processNum);
+        tr.append($('<td>' + response[i].processName + '</td>'));
+        tr.append(processRoom);
+        tr.append(processDate);
+        tr.append(teacherName);
+        $('#data').append(tr);
+      }
+    },
+  });
+  // 과정 상세정보 팝업창
+  function getProcess(processNum) {
+    $('.update-popup').css('display', 'block');
+    $.ajax({
+      url: '/process/' + processNum,
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        $('#update-processNum').val(response.processNum);
+        $('#update-processName').val(response.processName);
+        $('#update-processRoom').val(response.processRoom);
+        $('#update-processStartdate').val(response.processStartdate);
+        $('#update-processEnddate').val(response.processEnddate);
+        $('#update-teacherName').val(response.teacherName);
+      },
     });
-    $('.btn-close').click(function () {
-      $('.update-popup').css('display', 'none');
+  }
+
+  // 과정 목록 추가
+  function processAdd() {
+    var num = $("#add-processNum").val();
+    var name = $("#add-processName").val();
+    var processRoom = $("#add-processRoom").val();
+    var startdate = $("#add-processStartdate").val();
+    var enddate = $("#add-processEnddate").val();
+    var teacherName = $('#add-teacherName').val();
+
+    var jsonData = {
+      processNum: num,
+      processName: name,
+      processRoom: processRoom,
+      processStartdate: startdate,
+      processEnddate: enddate,
+      teacherName: teacherName
+    };
+
+    $.ajax({
+      url: '/api/v1/processInsert',
+      type: 'POST',
+      contentType: 'application/json', //서버에 json 타입으로 보낼 예정(요청)
+      data: JSON.stringify(jsonData),
+      dataType: 'json',
+      success: function (response) {
+        console.log(response);
+        alert('과정 등록 완료');
+        location.reload();
+      },
     });
-    let list = document.querySelectorAll('.navigation li');
-    function activeLink() {
-      list.forEach((item) => {
-        item.classList.remove('hovered');
-      });
-      this.classList.add('hovered');
-    }
+  }
+  //과정목록 수정
+  function doUpdate() {
+    var num = $("#update-processNum").val();
+    var name = $("#update-processName").val();
+    var processRoom = $("#update-processRoom").val();
+    var startdate = $("#update-processStartdate").val();
+    var enddate = $("#update-processEnddate").val();
+    var teacherName = $('#update-teacherName').val();
+
+    var jsonData = {
+      processNum: num,
+      processName: name,
+      processRoom: processRoom,
+      processStartdate: startdate,
+      processEnddate: enddate,
+      teacherName: teacherName
+    };
+
+    $.ajax({
+      url: '/process',
+      type: 'PATCH',
+      contentType: 'application/json', //서버에 json 타입으로 보낼 예정(요청)
+      data: JSON.stringify(jsonData),
+      dataType: 'json',
+      success: function (response) {
+        console.log(response);
+        alert('과정 정보 수정 완료');
+        location.reload(); //강제 새로고침
+      },
+    });
+  }
+
+  //과정 목록 삭제
+  function doDelete() {
+    var num = $("#update-processNum").val();
+
+    $.ajax({
+      url: '/process/' + num,
+      type: 'DELETE',
+      dataType: 'json',
+      success: function (response) {
+        alert('과정목록 삭제 완료!✋✋');
+        location.reload(); //강제 새로고침
+      },
+    });
+  }
+
+
+  $('.btn-cancel').click(function () {
+    $('.write-popup').css('display', 'none');
+  });
+  $('.btn-close').click(function () {
+    $('.update-popup').css('display', 'none');
+  });
+  let list = document.querySelectorAll('.navigation li');
+  function activeLink() {
     list.forEach((item) => {
-      item.addEventListener('mouseover', activeLink);
+      item.classList.remove('hovered');
     });
+    this.classList.add('hovered');
+  }
+  list.forEach((item) => {
+    item.addEventListener('mouseover', activeLink);
+  });
 
-    function getSubject() {
-      $('.update-popup').css('display', 'block');
-    }
+  function getSubject() {
+    $('.update-popup').css('display', 'block');
+  }
 
-    function addSubject() {
-      $('.write-popup').css('display', 'block');
-    }
-  </script>
+  function addSubject() {
+    $('.write-popup').css('display', 'block');
+  }
+</script>
+
 </html>
