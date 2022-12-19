@@ -17,11 +17,11 @@ import com.dw.springcrudjpa.repository.ProcessRepo;
 import com.dw.springcrudjpa.repository.StudentRepo;
 
 @RestController
-public class ApiController {
+public class ApiController<repo> {
 
     @Autowired
     StudentRepo repo;
-	@Autowired
+    @Autowired
     ProcessRepo repos;
 
     // 학생 전체조회
@@ -30,7 +30,7 @@ public class ApiController {
         return repo.findAll();
     }
 
-	// 과정 전체조회
+    // 과정 전체조회
     @GetMapping("/api/v1/process")
     public List<Process> callAllsProcess() {
         return repos.findAll();
@@ -38,65 +38,71 @@ public class ApiController {
 
     // 학생등록
     @PostMapping("/api/v1/students")
-	public Student callSaveStudent(@RequestBody Student student) {
-		// save == insert
-		student = repo.save(student);
-		return student;
-	}
+    public Student callSaveStudent(@RequestBody Student student) {
+        // save == insert
+        student = repo.save(student);
+        return student;
+    }
 
-	// 과정등록
+    // 과정등록
     @PostMapping("/api/v1/processInsert")
-	public Process callSaveProcess(@RequestBody Process process) {
-		// save == insert
-		process = repos.save(process);
-		return process;
-	}
+    public Process callSaveProcess(@RequestBody Process process) {
+        // save == insert
+        process = repos.save(process);
+        return process;
+    }
 
-	// 학생정보 상세 조회
+    // 학생정보 상세 조회
     @GetMapping("/student/{studentNum}")
-	public Student callStudentById(@PathVariable long studentNum) {
-		return repo.findById(studentNum).get();
-	}
+    public Student callStudentById(@PathVariable long studentNum) {
+        return repo.findById(studentNum).get();
+    }
 
     // 과정정보 상세 조회
     @GetMapping("/process/{processNum}")
-	public Process callProcessById(@PathVariable long processNum) {
-		return repos.findById(processNum).get();
-	}
+    public Process callProcessById(@PathVariable long processNum) {
+        return repos.findById(processNum).get();
+    }
 
-	
+    // 학생목록 수정
+    @PatchMapping("/student")
+    public Student updateStudent(@RequestBody Student student) {
+        // save == update or insert
+        // 동일한 PK 값이 있으면 update!
+        // 동일한 PK 값이 없으면 insert!
+        student = repo.save(student);
+        return student;
+    }
 
-    //학생목록 수정
-	@PatchMapping("/student")
-	public Student updateStudent(@RequestBody Student student) {
-		// save == update or insert
-		// 동일한 PK 값이 있으면 update!
-		// 동일한 PK 값이 없으면 insert!
-		student = repo.save(student);
-		return student;
-	}
+    // 과정목록 수정
+    @PatchMapping("/process")
+    public Process updateStudent(@RequestBody Process process) {
+        // save == update or insert
+        // 동일한 PK 값이 있으면 update!
+        // 동일한 PK 값이 없으면 insert!
+        process = repos.save(process);
+        return process;
+    }
 
-	//과정목록 수정
-	@PatchMapping("/process")
-	public Process updateStudent(@RequestBody Process process) {
-		// save == update or insert
-		// 동일한 PK 값이 있으면 update!
-		// 동일한 PK 값이 없으면 insert!
-		process = repos.save(process);
-		return process;
-	}
+    // 학생 정보 삭제
+    @DeleteMapping("/student/{num}")
+    public boolean callDeleteMember(@PathVariable long num) {
+        try {
+            repo.deleteById(num);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-    // 삭제
-	@DeleteMapping("/student/{num}")
-	public boolean callDeleteMember(@PathVariable long num) {
-
-		// deleteById == delete
-		// By == where
-		try {
-			repo.deleteById(num); // 리턴타입이 void
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
+    // 과정 목록 삭제
+    @DeleteMapping("/process/{num}")
+    public boolean callDeleteProcess(@PathVariable long num) {
+        try {
+            repos.deleteById(num);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

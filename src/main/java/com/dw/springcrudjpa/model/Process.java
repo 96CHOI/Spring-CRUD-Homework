@@ -16,7 +16,7 @@ public class Process {
 
     @Id
     @Column
-    private long processNum; // pk
+    private long processNum; // pk 과정번호
 
     @Column(length = 30)
     private String processName; // 과목명
@@ -26,7 +26,7 @@ public class Process {
 
     @Column
     private String processStartdate; // 과정기간시작
-    
+
     @Column
     private String processEnddate; // 과정기간끝
 
