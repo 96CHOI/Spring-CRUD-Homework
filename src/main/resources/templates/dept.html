@@ -158,7 +158,13 @@
           processNum = $('<td>' + response[i].processNum + '</td>');
           processName = $('<td>' + response[i].processName + '</td>');
           processRoom = $('<td>' + response[i].processRoom + '</td>');
-          processDate = $('<td>' + response[i].processStartdate + '~' + response[i].processEnddate + '</td>');
+          processDate = $(
+            '<td>' +
+              response[i].processStartdate.replaceAll(/-/g, '.').substr(2, 8) +
+              ' ~ ' +
+              response[i].processEnddate.replace(/-/g, '.').substr(2, 8) +
+              '</td>',
+          );
           teacherName = $('<td>' + response[i].teacherName + '</td>');
           tr.append(processNum);
           tr.append($('<td>' + response[i].processName + '</td>'));

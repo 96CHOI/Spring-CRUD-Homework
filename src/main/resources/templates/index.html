@@ -29,8 +29,7 @@
             <label>과정 번호 </label>
             <!-- <input id="add-processNum" type="number" placeholder=" 과정번호를 입력하세요..." /> -->
             <select name="" id="add-processNum">
-              <option value="4141">백엔드 정복하기</option>
-              <option value="73152">프론트엔드 정복하기</option>
+              <option value="">과정을 선택해주세요...</option>
             </select>
           </div>
           <div class="input-box">
@@ -69,9 +68,7 @@
           </div>
           <div class="input-box">
             <label>과정 번호 </label>
-            <select name="" id="update-processNum">
-              <option value="73152">프론트엔드 정복하기</option>
-            </select>
+            <select name="" id="update-processNum"></select>
           </div>
           <div class="input-box">
             <label>주소 </label>
@@ -216,9 +213,26 @@
           tr.append(processName);
           $('#data').append(tr);
         }
+
         $('#studentsCnt').text(cnt);
         $('#boardCnt').text(parseInt(avg / cnt));
         console.log(avg / cnt);
+      },
+    });
+    // 학생등록 (과정 명) 옵션추가
+    $.ajax({
+      url: '/api/v1/process',
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        console.log(response);
+        for (var i = 0; i < response.length; i++) {
+          processName = $('<option value="' + response[i].processNum + '">' + response[i].processName + '</option>');
+
+          $('#add-processNum').append(processName);
+          $('#updete-processNum').append(processName);
+        }
+        console.log(response);
       },
     });
 
