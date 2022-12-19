@@ -7,7 +7,6 @@
     <title>CRUD! 😛</title>
     <link rel="stylesheet" href="/style.css" />
   </head>
-
   <body>
     <div class="container">
       <!-- 학생 추가 팝업 -->
@@ -116,7 +115,7 @@
       <div class="cardBox">
         <div class="card">
           <div>
-            <div id="studentsCnt" class="numbers">2</div>
+            <div id="studentsCnt" class="numbers"></div>
             <div class="cardName">학생 수</div>
           </div>
           <div class="iconBx">
@@ -125,7 +124,7 @@
         </div>
         <div class="card">
           <div>
-            <div id="boardCnt" class="numbers">27.6</div>
+            <div id="boardCnt" class="numbers"></div>
             <div class="cardName">학생 평균나이</div>
           </div>
           <div class="iconBx">
@@ -194,13 +193,14 @@
           studentAge = $('<td>' + response[i].studentAge + '</td>');
           avg += response[i].studentAge;
           cnt++;
+          lastphoneNum = response[i].studentPhone.substring(7, 11)
           studentPhone = $(
             '<td>' +
               response[i].studentPhone.substring(0, 3) +
               '-' +
               response[i].studentPhone.substring(3, 7) +
               '-' +
-              response[i].studentPhone.substring(7, 11) +
+              response[i].studentPhone.substring(7, 11).replace(/[0-9]/g,'*') +
               '</td>',
           );
           studentAddr = $('<td>' + response[i].studentAddr + '</td>');
