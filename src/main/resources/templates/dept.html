@@ -35,7 +35,7 @@
             <input id="add-teacherName" type="text" placeholder="교사이름 입력하세요..." />
           </div>
           <div class="btn-area">
-            <a href="#" class="btn-cancel" onclick="">취소</a>
+            <a href="#" class="btn-cancel" onclick="cancel()">취소</a>
             <a href="#" class="btn-success" onclick="processAdd()">등록</a>
           </div>
         </div>
@@ -271,7 +271,9 @@
         },
       });
     }
-
+    function cancel() {
+      alert('취소되었습니다.');
+    }
     $('.btn-cancel').click(function () {
       $('.write-popup').css('display', 'none');
     });

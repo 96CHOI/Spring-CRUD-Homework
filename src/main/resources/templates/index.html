@@ -25,10 +25,10 @@
             <input id="add-studentPhone" type="number" placeholder=" - 를 제거하고 입력하세요." />
           </div>
           <div class="input-box">
-            <label>과정 번호 </label>
+            <label>과정 명 : </label>
             <!-- <input id="add-processNum" type="number" placeholder=" 과정번호를 입력하세요..." /> -->
-            <select name="" id="add-processNum">
-              <option value="">과정을 선택해주세요...</option>
+            <select id="add-processNum">
+              <option>과정을 선택해주세요...</option>
             </select>
           </div>
           <div class="input-box">
@@ -38,7 +38,7 @@
           </div>
 
           <div class="btn-area">
-            <a href="#" class="btn-cancel" onclick="">등록 취소</a>
+            <a href="#" class="btn-cancel" onclick="cancel()">등록 취소</a>
             <a href="#" class="btn-success" onclick="studentAdd()">학생 등록</a>
           </div>
         </div>
@@ -66,7 +66,7 @@
             <input id="update-studentPhone" type="number" />
           </div>
           <div class="input-box">
-            <label>과정 번호 </label>
+            <label>과정 명 : </label>
             <select name="" id="update-processNum"></select>
           </div>
           <div class="input-box">
@@ -193,14 +193,14 @@
           studentAge = $('<td>' + response[i].studentAge + '</td>');
           avg += response[i].studentAge;
           cnt++;
-          lastphoneNum = response[i].studentPhone.substring(7, 11)
+          lastphoneNum = response[i].studentPhone.substring(7, 11);
           studentPhone = $(
             '<td>' +
               response[i].studentPhone.substring(0, 3) +
               '-' +
               response[i].studentPhone.substring(3, 7) +
               '-' +
-              response[i].studentPhone.substring(7, 11).replace(/[0-9]/g,'*') +
+              response[i].studentPhone.substring(7, 11).replace(/[0-9]/g, '*') +
               '</td>',
           );
           studentAddr = $('<td>' + response[i].studentAddr + '</td>');
@@ -229,8 +229,12 @@
         for (var i = 0; i < response.length; i++) {
           processName = $('<option value="' + response[i].processNum + '">' + response[i].processName + '</option>');
 
+          $('#update-processNum').append(processName);
+        }
+        for (var i = 0; i < response.length; i++) {
+          processName = $('<option value="' + response[i].processNum + '">' + response[i].processName + '</option>');
+
           $('#add-processNum').append(processName);
-          $('#updete-processNum').append(processName);
         }
         console.log(response);
       },
@@ -250,6 +254,7 @@
           $('#update-studentAge').val(response.studentAge);
           $('#update-studentPhone').val(response.studentPhone);
           $('#update-studentAddr').val(response.studentAddr);
+          $('#update-processNum').val(response.process.processNum);
         },
       });
     }
@@ -333,7 +338,9 @@
         },
       });
     }
-
+    function cancel() {
+      alert('취소되었습니다.');
+    }
     $('#empAdd').click(function () {
       $('.write-popup').css('display', 'block');
     });
